@@ -10,3 +10,5 @@ for category in categories:
         file_name = "{category}_{index}.png".format(category=category, index=index)
         current_file = "{src}/{category}/{name}".format(src=SOURCE_PATH, category=category, name=file)
         new_file = "{src}/{category}/{name}".format(src=SOURCE_PATH, category=category, name=file_name)
+
+        os.rename(current_file, new_file)

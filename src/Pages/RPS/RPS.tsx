@@ -19,13 +19,17 @@ export const RPS: React.FC = () => {
   };
 
   const takeCapture = () => {
-    const image = cameraRef.current.capture();
+    const image = cameraRef.current!.capture();
 
     const prediction = model.current!.predict(image);
 
     prediction
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //   @ts-expect-error
       .softmax()
       .array()
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //   @ts-expect-error
       .then((array) => {
         const probabilities = array[0]; // Since the output shape is [1, 3]
         const predictedClass = probabilities.indexOf(
@@ -36,13 +40,12 @@ export const RPS: React.FC = () => {
 
         console.log(`Predicted class: ${classNames[predictedClass]}`);
       });
-
-    // const prediction = model.current!.predict(image);
-    // const probabilities = tf.softmax(prediction);
   };
 
   React.useEffect(() => {
     (async () => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
       model.current = await loadModel();
 
       console.log(model.current!.outputs[0].shape);
@@ -59,7 +62,7 @@ export const RPS: React.FC = () => {
         autoPlay
         playsInline
         muted
-        width={400}
+        width={600}
         height={600}
       />
       <button onClick={takeCapture}>Capture</button>
