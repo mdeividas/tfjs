@@ -8,7 +8,7 @@ export const RPS: React.FC = () => {
   const videoRef = React.useRef<HTMLVideoElement>(null);
   const cameraRef = React.useRef<Webcam>(null);
   const model = React.useRef<tf.Sequential>(null);
-  const canvasRef = React.useRef<HTMLCanvasElement>(null);
+  const [result, setResult] = React.useState("");
 
   const handleWebCamera = async () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -36,9 +36,7 @@ export const RPS: React.FC = () => {
           Math.max(...probabilities),
         );
 
-        const classNames = ["rock", "paper", "scissors"];
-
-        console.log(`Predicted class: ${classNames[predictedClass]}`);
+        setResult(["rock", "paper", "scissors"][predictedClass]);
       });
   };
 
@@ -56,7 +54,6 @@ export const RPS: React.FC = () => {
 
   return (
     <div>
-      <canvas ref={canvasRef} />
       <video
         ref={videoRef}
         autoPlay
@@ -66,6 +63,7 @@ export const RPS: React.FC = () => {
         height={600}
       />
       <button onClick={takeCapture}>Capture</button>
+      <h1>{result}</h1>
     </div>
   );
 };
