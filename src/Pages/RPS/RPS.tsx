@@ -6,6 +6,7 @@ import { loadModel } from "./tensorflow";
 import Webcam from "./../../services/Camera";
 import { ErrorView } from "./components/ErrorView";
 import { PlayView } from "./components/PlayView";
+import { ResultView } from "./components/ResultView.tsx";
 import { IntroView } from "./components/IntroView";
 import { WIDTH, HEIGHT, CATEGORIES, EMOJI_BY_CATEGORIES } from "./constants";
 import Store from "./store/store";
@@ -16,8 +17,6 @@ let model: tf.LayersModel;
 interface IProps {
   store: Store;
 }
-
-// TODO add translations support (?)
 
 export const RPS = observer((props: IProps) => {
   const videoRef = React.useRef<HTMLVideoElement>(null);
@@ -91,15 +90,16 @@ export const RPS = observer((props: IProps) => {
             {props.store.isReady ? (
               <>
                 {props.store.result.player !== null && (
-                  <div className="relateive md:absolute flex justify-center items-center bottom-[100] w-full md:w-[100] p-4 md:p-0">
-                    {EMOJI_BY_CATEGORIES[CATEGORIES[props.store.result.player]]}
+                  <div className="relateive md:absolute flex justify-around items-center bottom-[100] w-full p-4 md:p-0">
+                    <ResultView
+                      result={props.store.result.player}
+                      title="You"
+                    />
+                    <ResultView result={props.store.result.ai!} title="AI" />
                   </div>
                 )}
                 <div className="relateive md:absolute flex justify-center items-center bottom-4 w-full md:w-[100] p-4 md:p-0">
                   <PlayView onFinish={takeCapture} />
-                </div>
-                <div className="relative md:absolute right-4 bottom-4 w-full md:w-1/4 p-4 md:p-0 bg-red-300 rounded-md">
-                  Content
                 </div>
               </>
             ) : (

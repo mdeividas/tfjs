@@ -12,6 +12,7 @@ export const PlayView = inject("store")(
   observer((props: IProps) => {
     const timer = React.useRef<number>(0);
     const counterTimer = React.useRef<number>(0);
+    const timeout = React.useRef<number>(0);
     const [leftTime, setLeftTime] = React.useState<number>(0);
 
     const onTick = () => {
@@ -34,7 +35,12 @@ export const PlayView = inject("store")(
       timer.current = window.setTimeout(() => {
         props.onFinish();
         props.store!.setProcessing(false);
+
+        timeout.current = window.setTimeout(() => {
+          props.store!.resetResult();
+        }, 4000);
       }, 3000);
+
       counterTimer.current = window.setTimeout(onTick, 1000);
     };
 
@@ -42,6 +48,7 @@ export const PlayView = inject("store")(
       return () => {
         window.clearTimeout(timer.current);
         window.clearTimeout(counterTimer.current);
+        window.clearTimeout(timeout.current);
       };
     }, []);
 
@@ -59,8 +66,14 @@ export const PlayView = inject("store")(
           </motion.div>
         )}
 
+        {!leftTime && props.store!.score.player + props.store!.score.ai > 0 && (
+          <div className="text-white font-bold text-8xl text-center mb-4">
+            {`${props.store!.score.player} : ${props.store!.score.ai}`}
+          </div>
+        )}
+
         <button
-          className="bg-violet-400 hover:bg-violet-500 text-white font-semibold py-2 px-4 text-4xl rounded shadow"
+          className="bg-rose-600 hover:bg-rose-700 text-white font-semibold py-2 px-4 text-4xl rounded shadow"
           onClick={handleClick}
           disabled={props.store!.processing}
         >
