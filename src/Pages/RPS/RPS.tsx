@@ -2,7 +2,7 @@ import React from "react";
 import * as tf from "@tensorflow/tfjs";
 import { loadModel } from "./tensorflow";
 import Webcam from "./../../services/Camera.ts";
-import { WIDTH, HEIGHT, CATEGORIES } from "./constants.ts";
+import { WIDTH, HEIGHT, CATEGORIES, EMOJI_BY_CATEGORIES } from "./constants.ts";
 
 let camera: Webcam;
 let model: tf.LayersModel;
@@ -57,7 +57,9 @@ export const RPS: React.FC = () => {
             width={window.innerWidth}
             height={window.innerHeight}
           />
-          <h1>{result}</h1>
+          {!!result && (
+            <h1 style={{ fontSize: 30 }}>{EMOJI_BY_CATEGORIES[result]}</h1>
+          )}
         </div>
         <div className="absolute w-full md:w-[100] p-4 md:p-0">
           <button onClick={takeCapture}>Capture</button>
