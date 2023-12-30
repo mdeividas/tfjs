@@ -57,7 +57,7 @@ export const PlayView = inject("store")(
         {leftTime > 0 && (
           <motion.div
             key={leftTime}
-            className="text-white font-bold text-8xl text-center mb-4"
+            className="text-slate-700 md:text-white font-bold text-8xl text-center mb-4"
             initial={{ opacity: 0, y: "100%" }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: "-100%" }}
@@ -67,7 +67,7 @@ export const PlayView = inject("store")(
         )}
 
         {!leftTime && props.store!.score.player + props.store!.score.ai > 0 && (
-          <div className="text-white font-bold text-8xl text-center mb-4">
+          <div className="text-slate-700 md:text-white font-bold text-8xl text-center mb-4">
             {`${props.store!.score.player} : ${props.store!.score.ai}`}
           </div>
         )}

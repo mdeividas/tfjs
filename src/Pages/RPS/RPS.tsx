@@ -75,7 +75,7 @@ export const RPS = observer((props: IProps) => {
               videoRef.current!.scrollIntoView({ behavior: "smooth" })
             }
           />
-          <div className="relative flex flex-col md:flex-row justify-center items-center gap-28">
+          <div className="relative flex flex-col md:flex-row justify-center items-center">
             <div className="w-full flex items-center justify-center">
               <video
                 ref={videoRef}
@@ -90,7 +90,7 @@ export const RPS = observer((props: IProps) => {
             {props.store.isReady ? (
               <>
                 {props.store.result.player !== null && (
-                  <div className="relateive md:absolute flex justify-around items-center bottom-[100] w-full p-4 md:p-0">
+                  <div className="relative md:absolute flex flex-row justify-around items-center bottom-[100] pt-4 md:pt-0 w-full">
                     <ResultView
                       result={props.store.result.player}
                       title="You"
@@ -98,7 +98,7 @@ export const RPS = observer((props: IProps) => {
                     <ResultView result={props.store.result.ai!} title="AI" />
                   </div>
                 )}
-                <div className="relateive md:absolute flex justify-center items-center bottom-4 w-full md:w-[100] p-4 md:p-0">
+                <div className="relateive shadow-2xl md:shadow-none mt-4 md:mt-0 md:absolute bg-white md:bg-transparent flex justify-center items-center bottom-4 w-full md:w-[100] p-4 md:p-0">
                   <PlayView onFinish={takeCapture} />
                 </div>
               </>
