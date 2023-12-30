@@ -21,7 +21,6 @@ interface IProps {
 
 export const RPS = observer((props: IProps) => {
   const videoRef = React.useRef<HTMLVideoElement>(null);
-  const [result, setResult] = React.useState("");
 
   const handleWebCamera = async () => {
     camera = new Webcam(videoRef.current!, WIDTH, HEIGHT);
@@ -43,7 +42,7 @@ export const RPS = observer((props: IProps) => {
           Math.max(...probabilities),
         );
 
-        setResult(CATEGORIES[predictedClass]);
+        props.store.setResult(predictedClass);
       });
   };
 
@@ -91,14 +90,13 @@ export const RPS = observer((props: IProps) => {
             </div>
             {props.store.isReady ? (
               <>
-                <div className="absolute w-full md:w-[100] p-4 md:p-0">
-                  <PlayView />
-                  <button onClick={takeCapture}>Capture</button>
-                  {!!result && (
-                    <h1 style={{ fontSize: 30 }}>
-                      {EMOJI_BY_CATEGORIES[result]}
-                    </h1>
-                  )}
+                {props.store.result.player !== null && (
+                  <div className="relateive md:absolute flex justify-center items-center bottom-[100] w-full md:w-[100] p-4 md:p-0">
+                    {EMOJI_BY_CATEGORIES[CATEGORIES[props.store.result.player]]}
+                  </div>
+                )}
+                <div className="relateive md:absolute flex justify-center items-center bottom-4 w-full md:w-[100] p-4 md:p-0">
+                  <PlayView onFinish={takeCapture} />
                 </div>
                 <div className="relative md:absolute right-4 bottom-4 w-full md:w-1/4 p-4 md:p-0 bg-red-300 rounded-md">
                   Content
