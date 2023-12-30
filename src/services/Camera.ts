@@ -24,10 +24,6 @@ export default class Webcam {
   width: number;
   height: number;
 
-  /**
-   * @param {HTMLVideoElement} webcamElement A HTMLVideoElement representing the
-   *     webcam feed.
-   */
   constructor(webcamElement: HTMLVideoElement, width: number, height: number) {
     this.webcamElement = webcamElement;
     this.width = width;
@@ -43,8 +39,6 @@ export default class Webcam {
     return tf.tidy(() => {
       // Reads the image as a Tensor from the webcam <video> element.
       const webcamImage = tf.browser.fromPixels(this.webcamElement);
-
-      console.log("__DEBUG", this.webcamElement);
 
       const reversedImage = webcamImage.reverse(1);
 
@@ -99,7 +93,7 @@ export default class Webcam {
     }
 
     this.webcamElement.srcObject = await navigator.mediaDevices.getUserMedia({
-      video: true,
+      video: { width: this.width, height: this.height },
       audio: false,
     });
 

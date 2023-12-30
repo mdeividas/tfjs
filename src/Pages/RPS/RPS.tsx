@@ -2,54 +2,45 @@ import React from "react";
 import * as tf from "@tensorflow/tfjs";
 import { loadModel } from "./tensorflow";
 import Webcam from "./../../services/Camera.ts";
-import { WIDTH, HEIGHT } from "./constants.ts";
+import { WIDTH, HEIGHT, CATEGORIES } from "./constants.ts";
+
+let camera: Webcam;
+let model: tf.LayersModel;
 
 export const RPS: React.FC = () => {
   const videoRef = React.useRef<HTMLVideoElement>(null);
-  const cameraRef = React.useRef<Webcam>(null);
-  const model = React.useRef<tf.Sequential>(null);
   const [result, setResult] = React.useState("");
 
   const handleWebCamera = async () => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    cameraRef.current = new Webcam(videoRef.current!, WIDTH, HEIGHT);
+    camera = new Webcam(videoRef.current!, WIDTH, HEIGHT);
 
-    await cameraRef.current.setup();
+    await camera.setup();
   };
 
   const takeCapture = () => {
-    const image = cameraRef.current!.capture();
+    const image = camera.capture();
 
-    const prediction = model.current!.predict(image);
+    const prediction = model.predict(image);
 
-    prediction
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      //   @ts-expect-error
+    (prediction as tf.Tensor<tf.Rank>)
       .softmax()
       .array()
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      //   @ts-expect-error
       .then((array) => {
-        const probabilities = array[0]; // Since the output shape is [1, 3]
+        const probabilities = (array as number[][])[0]; // Since the output shape is [1, 3]
         const predictedClass = probabilities.indexOf(
           Math.max(...probabilities),
         );
 
-        setResult(["rock", "paper", "scissors"][predictedClass]);
+        setResult(CATEGORIES[predictedClass]);
       });
   };
 
   React.useEffect(() => {
     (async () => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      model.current = await loadModel();
+      model = await loadModel();
 
-      console.log(model.current!.outputs[0].shape);
+      await handleWebCamera();
     })();
-
-    handleWebCamera();
   }, []);
 
   return (
