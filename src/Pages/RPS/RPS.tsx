@@ -45,7 +45,12 @@ export const RPS: React.FC = () => {
 
   return (
     <div className="flex flex-col mx-auto max-w-screen-xl">
-      <h1 className="text-3xl font-bold">Rock Paper Scissors</h1>
+      <h1 className="text-3xl font-bold text-center uppercase">
+        {CATEGORIES.join(" ")}
+      </h1>
+      <h2 className="text-center">
+        {CATEGORIES.map((category) => EMOJI_BY_CATEGORIES[category])}
+      </h2>
       <div className="relative flex flex-col md:flex-row justify-center items-center gap-28">
         <div className="w-full flex items-center justify-center p-4">
           <video
@@ -54,15 +59,15 @@ export const RPS: React.FC = () => {
             playsInline
             muted
             className="rounded-md"
-            width={window.innerWidth}
-            height={window.innerHeight}
+            width="100%"
+            height="100%"
           />
-          {!!result && (
-            <h1 style={{ fontSize: 30 }}>{EMOJI_BY_CATEGORIES[result]}</h1>
-          )}
         </div>
         <div className="absolute w-full md:w-[100] p-4 md:p-0">
           <button onClick={takeCapture}>Capture</button>
+          {!!result && (
+            <h1 style={{ fontSize: 30 }}>{EMOJI_BY_CATEGORIES[result]}</h1>
+          )}
         </div>
         <div className="relative md:absolute right-4 bottom-4 w-full md:w-1/4 p-4 md:p-0 bg-red-300 rounded-md">
           Content

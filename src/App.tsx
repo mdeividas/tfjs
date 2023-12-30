@@ -3,11 +3,7 @@ import { RPS } from "./Pages/RPS";
 import "./styles/tailwind.css";
 
 const App: React.FC = () => {
-  return (
-    <div>
-      <RPS />
-    </div>
-  );
+  return <RPS />;
 };
 
 export default App;
