@@ -5,6 +5,7 @@ import { observer } from "mobx-react";
 import { loadModel } from "./tensorflow";
 import Webcam from "./../../services/Camera";
 import { ErrorView } from "./components/ErrorView";
+import { PlayView } from "./components/PlayView";
 import { IntroView } from "./components/IntroView";
 import { WIDTH, HEIGHT, CATEGORIES, EMOJI_BY_CATEGORIES } from "./constants";
 import Store from "./store/store";
@@ -91,6 +92,7 @@ export const RPS = observer((props: IProps) => {
             {props.store.isReady ? (
               <>
                 <div className="absolute w-full md:w-[100] p-4 md:p-0">
+                  <PlayView />
                   <button onClick={takeCapture}>Capture</button>
                   {!!result && (
                     <h1 style={{ fontSize: 30 }}>
