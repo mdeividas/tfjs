@@ -53,17 +53,28 @@ export const RPS: React.FC = () => {
   }, []);
 
   return (
-    <div>
-      <video
-        ref={videoRef}
-        autoPlay
-        playsInline
-        muted
-        width={600}
-        height={600}
-      />
-      <button onClick={takeCapture}>Capture</button>
-      <h1>{result}</h1>
+    <div className="flex flex-col mx-auto max-w-screen-xl">
+      <h1 className="text-3xl font-bold">Rock Paper Scissors</h1>
+      <div className="relative flex flex-col md:flex-row justify-center items-center gap-28">
+        <div className="w-full flex items-center justify-center p-4">
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            muted
+            className="rounded-md"
+            width={window.innerWidth}
+            height={window.innerHeight}
+          />
+          <h1>{result}</h1>
+        </div>
+        <div className="absolute w-full md:w-[100] p-4 md:p-0">
+          <button onClick={takeCapture}>Capture</button>
+        </div>
+        <div className="relative md:absolute right-4 bottom-4 w-full md:w-1/4 p-4 md:p-0 bg-red-300 rounded-md">
+          Content
+        </div>
+      </div>
     </div>
   );
 };

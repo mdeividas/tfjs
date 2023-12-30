@@ -44,6 +44,8 @@ export default class Webcam {
       // Reads the image as a Tensor from the webcam <video> element.
       const webcamImage = tf.browser.fromPixels(this.webcamElement);
 
+      console.log("__DEBUG", this.webcamElement);
+
       const reversedImage = webcamImage.reverse(1);
 
       // Crop the image so we're using the center square of the rectangular
@@ -97,7 +99,7 @@ export default class Webcam {
     }
 
     this.webcamElement.srcObject = await navigator.mediaDevices.getUserMedia({
-      video: { width: this.width, height: this.height },
+      video: true,
       audio: false,
     });
 
