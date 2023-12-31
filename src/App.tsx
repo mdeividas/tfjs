@@ -1,11 +1,31 @@
 import React from "react";
-import { RpsPage } from "./Pages/RPS";
+import { Routes, Route } from "react-router-dom";
+import { LazyLoad } from "./components/LazyLoad";
+import { RPSPage } from "./Pages/RPS";
+import { CircleBoardPage } from "./Pages/CircleBoard";
 import "./styles/tailwind.css";
 
 const App: React.FC = () => {
   return (
     <>
-      <RpsPage />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <LazyLoad>
+              <RPSPage />
+            </LazyLoad>
+          }
+        />
+        <Route
+          path="/circle-board"
+          element={
+            <LazyLoad>
+              <CircleBoardPage />
+            </LazyLoad>
+          }
+        />
+      </Routes>
 
       <footer className="bg-white shadow mt-4 dark:bg-gray-800">
         <div className="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">

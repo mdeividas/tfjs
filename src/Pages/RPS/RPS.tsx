@@ -1,7 +1,7 @@
 import React from "react";
 import * as tf from "@tensorflow/tfjs";
 import { Blocks } from "react-loader-spinner";
-import { observer } from "mobx-react";
+import { observer, Provider } from "mobx-react";
 import { loadModel } from "./tensorflow";
 import Webcam from "./../../services/Camera";
 import { ErrorView } from "./components/ErrorView";
@@ -9,7 +9,7 @@ import { PlayView } from "./components/PlayView";
 import { ResultView } from "./components/ResultView.tsx";
 import { IntroView } from "./components/IntroView";
 import { WIDTH, HEIGHT, CATEGORIES, EMOJI_BY_CATEGORIES } from "./constants";
-import Store from "./store/store";
+import { store, Store } from "./store";
 
 let camera: Webcam;
 let model: tf.LayersModel;
@@ -18,7 +18,7 @@ interface IProps {
   store: Store;
 }
 
-export const RPS = observer((props: IProps) => {
+const RPS = observer((props: IProps) => {
   const videoRef = React.useRef<HTMLVideoElement>(null);
 
   const handleWebCamera = async () => {
@@ -114,3 +114,11 @@ export const RPS = observer((props: IProps) => {
     </div>
   );
 });
+
+const RpsPage = () => (
+  <Provider store={store}>
+    <RPS store={store} />
+  </Provider>
+);
+
+export default RpsPage;
