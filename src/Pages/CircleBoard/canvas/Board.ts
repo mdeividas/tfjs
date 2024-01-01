@@ -1,92 +1,4 @@
-interface IProps {
-  x: number;
-  y: number;
-  radius: number;
-  color: string;
-}
-
-class Circle {
-  #interval: number = 0;
-
-  #params: IProps;
-
-  #context: CanvasRenderingContext2D;
-
-  #speedX: number = 0;
-
-  #speedY: number = 0;
-
-  #shouldMoveX: boolean = false;
-
-  #shouldMoveY: boolean = false;
-
-  static DECELERATION = 0.7;
-
-  constructor(props: IProps, context: CanvasRenderingContext2D) {
-    this.#params = props;
-    this.#context = context;
-
-    window.addEventListener("mousemove", (event) => {
-      this.update(event.clientX, event.clientY);
-    });
-  }
-
-  #moveX() {
-    if (Math.abs(this.#speedX) < 0.3 || !this.#shouldMoveX) {
-      this.#shouldMoveX = false;
-      return;
-    }
-
-    this.#params.x += this.#speedX * -1;
-
-    this.#speedX = this.#speedX * Circle.DECELERATION;
-  }
-
-  #moveY() {
-    if (Math.abs(this.#speedY) < 0.3 || !this.#shouldMoveY) {
-      this.#shouldMoveY = false;
-      return;
-    }
-
-    this.#params.y += this.#speedY * -1;
-
-    this.#speedY = this.#speedY * Circle.DECELERATION;
-  }
-
-  update(x: number, y: number) {
-    this.#shouldMoveX = false;
-    this.#shouldMoveY = false;
-
-    this.#speedX = this.#params.x - x;
-    this.#speedY = this.#params.y - y;
-
-    this.#params.x = x;
-    this.#params.y = y;
-
-    window.clearTimeout(this.#interval);
-
-    this.#interval = window.setTimeout(() => {
-      this.#shouldMoveX = true;
-      this.#shouldMoveY = true;
-    }, 50);
-  }
-
-  draw() {
-    this.#context.beginPath();
-    this.#context.arc(
-      this.#params.x,
-      this.#params.y,
-      this.#params.radius,
-      0,
-      2 * Math.PI,
-    );
-    this.#context.fillStyle = this.#params.color;
-    this.#context.fill();
-
-    this.#moveX();
-    this.#moveY();
-  }
-}
+import Circle from "./Circle.ts";
 
 interface IAnimation {
   id: number;
@@ -95,9 +7,13 @@ interface IAnimation {
 }
 
 export default class Board {
-  canvas: HTMLCanvasElement;
+  #canvas: HTMLCanvasElement;
 
-  context: CanvasRenderingContext2D;
+  #x: number;
+
+  #y: number;
+
+  #context: CanvasRenderingContext2D;
 
   #circles: Circle[];
 
@@ -110,20 +26,44 @@ export default class Board {
   static FRAME_INTERVAL = 1000 / 60;
 
   constructor(canvas: HTMLCanvasElement) {
-    this.canvas = canvas;
+    const bounds = canvas.getBoundingClientRect();
 
-    this.context = canvas.getContext("2d")!;
+    this.#canvas = canvas;
 
-    this.canvas.width = window.innerWidth;
-    this.canvas.height = window.innerHeight;
+    this.#x = bounds.x;
+
+    this.#y = bounds.y - bounds.top;
+
+    this.#context = canvas.getContext("2d")!;
+
+    this.#canvas.width = window.innerWidth;
+    this.#canvas.height = window.innerHeight;
+    this.#canvas.style.background = "black";
 
     this.#circles = [
-      new Circle({ x: 40, y: 40, radius: 150, color: "red" }, this.context),
+      new Circle({ x: 40, y: 40, radius: 150, color: "red" }, this.#context),
+      new Circle({ x: 600, y: 800, radius: 150, color: "blue" }, this.#context),
     ];
   }
 
   #draw() {
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.#context.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
+
+    this.#circles.forEach((circle, index) => {
+      circle.checkXColliding(this.#x, this.#canvas.width);
+      circle.checkYColliding(this.#y, this.#canvas.height);
+      this.#circles.filter((childCircle, childIndex) => {
+        if (index !== childIndex) {
+          const { x, y, radius } = childCircle.getCoordinates();
+
+          const speeds = circle.checkColliding(x, y, radius);
+
+          if (speeds) {
+            childCircle.hit(speeds.speedX, speeds.speedY);
+          }
+        }
+      });
+    });
 
     this.#circles.forEach((circle) => circle.draw());
   }
