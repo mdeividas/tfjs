@@ -9,6 +9,10 @@ const CircleBoard: React.FC = () => {
     board.current = new Board(canvas.current!);
 
     board.current.init();
+
+    window.addEventListener("mousemove", (event) => {
+      board.current!.setCursor(event.clientX, event.clientY);
+    });
   }, []);
 
   return (

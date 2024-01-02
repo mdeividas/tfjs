@@ -2,7 +2,7 @@ interface IProps {
   x: number;
   y: number;
   radius: number;
-  color: string;
+  color: string[];
 }
 
 export default class Circle {
@@ -20,17 +20,13 @@ export default class Circle {
 
   #shouldMoveY: boolean = false;
 
+  #active: boolean = false;
+
   static DECELERATION = 0.7;
 
   constructor(props: IProps, context: CanvasRenderingContext2D) {
     this.#params = props;
     this.#context = context;
-
-    if (props.x === 40) {
-      window.addEventListener("mousemove", (event) => {
-        this.update(event.clientX, event.clientY);
-      });
-    }
   }
 
   #moveX() {
@@ -72,6 +68,10 @@ export default class Circle {
 
     // Calculate the two possible solutions for x
     return [x2 + root, x2 - root];
+  }
+
+  setActive(flag: boolean) {
+    this.#active = flag;
   }
 
   checkXColliding(x1: number, x2: number) {
@@ -163,7 +163,14 @@ export default class Circle {
       0,
       2 * Math.PI,
     );
-    this.#context.fillStyle = this.#params.color;
+
+    this.#context.strokeStyle = this.#params.color[1];
+    this.#context.lineWidth = 2;
+    this.#context.stroke();
+
+    this.#context.fillStyle = this.#active
+      ? this.#params.color[1]
+      : this.#params.color[0];
     this.#context.fill();
 
     this.#moveX();

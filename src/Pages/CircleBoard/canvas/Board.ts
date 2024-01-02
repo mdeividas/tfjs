@@ -1,4 +1,5 @@
 import Circle from "./Circle.ts";
+import Cursor from "./Cursor.ts";
 
 interface IAnimation {
   id: number;
@@ -16,6 +17,8 @@ export default class Board {
   #context: CanvasRenderingContext2D;
 
   #circles: Circle[];
+
+  #cursor: Cursor;
 
   #animation: IAnimation = {
     id: -1,
@@ -38,12 +41,20 @@ export default class Board {
 
     this.#canvas.width = window.innerWidth;
     this.#canvas.height = window.innerHeight;
-    this.#canvas.style.background = "black";
+    this.#canvas.classList.add("border-neutral-300", "border-2");
 
     this.#circles = [
-      new Circle({ x: 40, y: 40, radius: 150, color: "red" }, this.#context),
-      new Circle({ x: 600, y: 800, radius: 150, color: "blue" }, this.#context),
+      new Circle(
+        { x: 40, y: 40, radius: 150, color: ["#a5f3fc", "#0891b2"] },
+        this.#context,
+      ),
+      new Circle(
+        { x: 600, y: 800, radius: 150, color: ["#99f6e4", "#0f766e"] },
+        this.#context,
+      ),
     ];
+
+    this.#cursor = new Cursor(this.#context);
   }
 
   #draw() {
@@ -67,6 +78,8 @@ export default class Board {
     });
 
     this.#circles.forEach((circle) => circle.draw());
+
+    this.#cursor.draw();
   }
 
   #animate(timestamp = 0) {
@@ -82,6 +95,10 @@ export default class Board {
 
     this.#animation.lastTime = timestamp;
     this.#animation.id = requestAnimationFrame(this.#animate.bind(this));
+  }
+
+  setCursor(x: number, y: number) {
+    this.#cursor.update(x - this.#x, y - this.#y);
   }
 
   init() {
