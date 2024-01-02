@@ -20,6 +20,8 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
 
+    "baseUrl": "src",
+
     "paths": {
       "app/*": ["src/*"],
     }

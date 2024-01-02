@@ -1,4 +1,5 @@
 import { makeObservable, observable, action } from "mobx";
+import { CATEGORIES } from "../constants.ts";
 
 export default class Store {
   isReady: boolean = false;
@@ -55,11 +56,14 @@ export default class Store {
     this.result.player = category;
     this.result.ai = ai;
 
+    const playerCategoryName = CATEGORIES[category];
+    const aiCategoryName = CATEGORIES[ai];
+
     if (category !== ai) {
       if (
-        (category === 0 && ai === 2) ||
-        (category === 1 && ai === 0) ||
-        (category === 2 && ai === 1)
+        (playerCategoryName === "rock" && aiCategoryName === "scissors") ||
+        (playerCategoryName === "paper" && aiCategoryName === "rock") ||
+        (playerCategoryName === "scissors" && aiCategoryName === "paper")
       ) {
         return (this.score.player += 1);
       } else {

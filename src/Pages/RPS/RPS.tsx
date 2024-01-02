@@ -37,6 +37,7 @@ const RPS = observer((props: IProps) => {
       .array()
       .then((array) => {
         const probabilities = (array as number[][])[0]; // Since the output shape is [1, 3]
+
         const predictedClass = probabilities.indexOf(
           Math.max(...probabilities),
         );

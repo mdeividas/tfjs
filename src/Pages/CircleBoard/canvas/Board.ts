@@ -50,8 +50,6 @@ export default class Board {
     this.#context.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
 
     this.#circles.forEach((circle, index) => {
-      circle.checkXColliding(this.#x, this.#canvas.width);
-      circle.checkYColliding(this.#y, this.#canvas.height);
       this.#circles.filter((childCircle, childIndex) => {
         if (index !== childIndex) {
           const { x, y, radius } = childCircle.getCoordinates();
@@ -61,6 +59,9 @@ export default class Board {
           if (speeds) {
             childCircle.hit(speeds.speedX, speeds.speedY);
           }
+
+          circle.checkXColliding(this.#x, this.#canvas.width);
+          circle.checkYColliding(this.#y, this.#canvas.height);
         }
       });
     });
