@@ -128,6 +128,14 @@ export default class Circle {
     return null;
   }
 
+  isCursorOverCircle(x: number, y: number) {
+    const distance = Math.sqrt(
+      Math.pow(this.#params.x - x, 2) + Math.pow(this.#params.y - y, 2),
+    );
+
+    return distance <= this.#params.radius;
+  }
+
   hit(speedX: number, speedY: number) {
     this.#shouldMoveX = true;
     this.#speedX = speedX;

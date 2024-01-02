@@ -97,8 +97,23 @@ export default class Board {
     this.#animation.id = requestAnimationFrame(this.#animate.bind(this));
   }
 
+  #checkCursor(x: number, y: number) {
+    this.#circles.forEach((circle) => {
+      if (circle.isCursorOverCircle(x, y)) {
+        circle.setActive(true);
+        circle.update(x, y);
+      } else {
+        circle.setActive(false);
+      }
+    });
+  }
+
   setCursor(x: number, y: number) {
-    this.#cursor.update(x - this.#x, y - this.#y);
+    const nextX = x - this.#x;
+    const nextY = y - this.#y;
+    this.#cursor.update(nextX, nextY);
+
+    this.#checkCursor(nextX, nextY);
   }
 
   init() {

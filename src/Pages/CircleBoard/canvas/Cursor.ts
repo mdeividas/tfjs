@@ -9,6 +9,10 @@ export default class Cursor {
     this.#context = context;
   }
 
+  get coordinates() {
+    return { x: this.#x, y: this.#y };
+  }
+
   draw() {
     this.#context.beginPath();
 
