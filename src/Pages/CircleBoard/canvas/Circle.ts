@@ -1,3 +1,5 @@
+import { interpolate } from "../utils.ts";
+
 interface IProps {
   x: number;
   y: number;
@@ -22,7 +24,13 @@ export default class Circle {
 
   #active: boolean = false;
 
+  #activatingProgress: number = 0;
+
+  #activating: boolean = false;
+
   static DECELERATION = 0.7;
+
+  static ACTIVATION_TIME = 2000;
 
   constructor(props: IProps, context: CanvasRenderingContext2D) {
     this.#params = props;
@@ -70,8 +78,22 @@ export default class Circle {
     return [x2 + root, x2 - root];
   }
 
+  get active() {
+    return this.#active;
+  }
+
   setActive(flag: boolean) {
     this.#active = flag;
+
+    this.#activatingProgress = 0;
+    this.#activating = false;
+  }
+
+  startActivating() {
+    if (!this.#activating) {
+      this.#activatingProgress = 0;
+      this.#activating = true;
+    }
   }
 
   checkXColliding(x1: number, x2: number) {
@@ -172,17 +194,43 @@ export default class Circle {
       2 * Math.PI,
     );
 
-    this.#context.strokeStyle = this.#params.color[1];
-    this.#context.lineWidth = 2;
-    this.#context.stroke();
+    // this.#context.strokeStyle = this.#params.color[1];
+    // this.#context.lineWidth = 2;
+    // this.#context.stroke();
 
     this.#context.fillStyle = this.#active
       ? this.#params.color[1]
       : this.#params.color[0];
     this.#context.fill();
+    this.#context.closePath();
 
     this.#moveX();
     this.#moveY();
+
+    if (this.#activating) {
+      this.#activatingProgress += 1000 / 35;
+      const progress = Math.min(
+        interpolate(this.#activatingProgress, 0, Circle.ACTIVATION_TIME, 0, 1),
+        1,
+      );
+
+      this.#context.beginPath();
+      this.#context.arc(
+        this.#params.x,
+        this.#params.y,
+        this.#params.radius,
+        0,
+        2 * Math.PI * progress,
+      );
+
+      this.#context.strokeStyle = this.#params.color[1];
+      this.#context.lineWidth = 5;
+      this.#context.stroke();
+
+      if (progress === 1) {
+        this.setActive(true);
+      }
+    }
   }
 
   getCoordinates() {

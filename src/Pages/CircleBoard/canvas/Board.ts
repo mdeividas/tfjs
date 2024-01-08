@@ -97,23 +97,27 @@ export default class Board {
     this.#animation.id = requestAnimationFrame(this.#animate.bind(this));
   }
 
-  #checkCursor(x: number, y: number) {
+  #checkCursor(x: number, y: number, isFist: boolean) {
     this.#circles.forEach((circle) => {
-      if (circle.isCursorOverCircle(x, y)) {
-        circle.setActive(true);
-        circle.update(x, y);
+      if (isFist && circle.isCursorOverCircle(x, y)) {
+        if (circle.active) {
+          circle.update(x, y);
+        } else {
+          circle.startActivating();
+        }
       } else {
         circle.setActive(false);
       }
     });
   }
 
-  setCursor(x: number, y: number) {
+  setCursor(x: number, y: number, isFist: boolean) {
     const nextX = x - this.#x;
     const nextY = y - this.#y;
+
     this.#cursor.update(nextX, nextY);
 
-    this.#checkCursor(nextX, nextY);
+    this.#checkCursor(nextX, nextY, isFist);
   }
 
   init() {
