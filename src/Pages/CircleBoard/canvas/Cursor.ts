@@ -16,7 +16,7 @@ export default class Cursor {
   draw() {
     this.#context.beginPath();
 
-    this.#context.arc(this.#x, this.#y, 30, 0, 2 * Math.PI);
+    this.#context.arc(this.#x, this.#y, 15, 0, 2 * Math.PI);
 
     this.#context.strokeStyle = "#e11d48";
     this.#context.lineWidth = 2;

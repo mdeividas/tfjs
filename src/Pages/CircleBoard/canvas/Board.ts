@@ -16,7 +16,7 @@ export default class Board {
 
   #context: CanvasRenderingContext2D;
 
-  #circles: Circle[];
+  #circle: Circle;
 
   #cursor: Cursor;
 
@@ -43,16 +43,10 @@ export default class Board {
     this.#canvas.height = window.innerHeight;
     this.#canvas.classList.add("border-neutral-300", "border-2");
 
-    this.#circles = [
-      new Circle(
-        { x: 40, y: 40, radius: 150, color: ["#a5f3fc", "#0891b2"] },
-        this.#context,
-      ),
-      new Circle(
-        { x: 600, y: 800, radius: 150, color: ["#99f6e4", "#0f766e"] },
-        this.#context,
-      ),
-    ];
+    this.#circle = new Circle(
+      { x: 40, y: 40, radius: 80, color: ["#a5f3fc", "#0891b2"] },
+      this.#context,
+    );
 
     this.#cursor = new Cursor(this.#context);
   }
@@ -60,24 +54,9 @@ export default class Board {
   #draw() {
     this.#context.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
 
-    this.#circles.forEach((circle, index) => {
-      this.#circles.filter((childCircle, childIndex) => {
-        if (index !== childIndex) {
-          const { x, y, radius } = childCircle.getCoordinates();
-
-          const speeds = circle.checkColliding(x, y, radius);
-
-          if (speeds) {
-            childCircle.hit(speeds.speedX, speeds.speedY);
-          }
-
-          circle.checkXColliding(this.#x, this.#canvas.width);
-          circle.checkYColliding(this.#y, this.#canvas.height);
-        }
-      });
-    });
-
-    this.#circles.forEach((circle) => circle.draw());
+    this.#circle.checkXColliding(this.#x, this.#canvas.width);
+    this.#circle.checkYColliding(this.#y, this.#canvas.height);
+    this.#circle.draw();
 
     this.#cursor.draw();
   }
@@ -98,17 +77,15 @@ export default class Board {
   }
 
   #checkCursor(x: number, y: number, isFist: boolean) {
-    this.#circles.forEach((circle) => {
-      if (isFist && circle.isCursorOverCircle(x, y)) {
-        if (circle.active) {
-          circle.update(x, y);
-        } else {
-          circle.startActivating();
-        }
-      } else {
-        circle.setActive(false);
+    if (isFist) {
+      if (this.#circle.active) {
+        this.#circle.update(x, y);
+      } else if (this.#circle.isCursorOverCircle(x, y)) {
+        this.#circle.startActivating();
       }
-    });
+    } else {
+      this.#circle.setActive(false);
+    }
   }
 
   setCursor(x: number, y: number, isFist: boolean) {
