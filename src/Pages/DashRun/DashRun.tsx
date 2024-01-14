@@ -16,7 +16,7 @@ const model = handPoseDetection.SupportedModels.MediaPipeHands;
 
 let detector: handPoseDetection.HandDetector;
 
-const CircleBoard: React.FC = () => {
+const DashRun: React.FC = () => {
   const canvas = React.useRef<HTMLCanvasElement>(null);
   const board = React.useRef<Board>();
   const videoRef = React.useRef<HTMLVideoElement>(null);
@@ -27,7 +27,21 @@ const CircleBoard: React.FC = () => {
     await camera.setup();
   };
 
-  const handleDetection = async () => {
+  const onFinish = () => {
+    onStart();
+  };
+
+  const onLost = () => {
+    if (confirm("You touched the wall! Play again?")) {
+      onStart();
+    }
+  };
+
+  const onStart = () => {
+    board.current!.start();
+  };
+
+  const handleDetection = async (): Promise<void> => {
     const hands = await detector.estimateHands(videoRef.current!);
 
     if (hands.length) {
@@ -36,8 +50,8 @@ const CircleBoard: React.FC = () => {
       const category = KMeansCentroidsSearch(points);
 
       board.current!.setCursor(
-        Math.round((data.wrist.x * window.innerWidth) / 300),
-        interpolate(data.wrist.y, 100, 220, 50, window.innerHeight),
+        interpolate(data.wrist.x, 0, 300, window.innerWidth, 0),
+        interpolate(data.wrist.y, 0, 240, 0, window.innerHeight),
         category === 0, // indicates that the hand pose is fist
       );
     }
@@ -49,6 +63,9 @@ const CircleBoard: React.FC = () => {
     board.current = new Board(canvas.current!);
 
     board.current.init();
+
+    board.current.onLost = onLost;
+    board.current.onWin = onFinish;
 
     (async () => {
       detector = await handPoseDetection.createDetector(model, {
@@ -82,4 +99,4 @@ const CircleBoard: React.FC = () => {
   );
 };
 
-export default CircleBoard;
+export default DashRun;

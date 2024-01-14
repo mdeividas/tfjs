@@ -22,6 +22,10 @@ export default class Circle {
 
   static ACTIVATION_TIME = 500;
 
+  static clamp = (value: number, min: number, max: number) => {
+    return Math.min(Math.max(value, min), max);
+  };
+
   constructor(props: IProps, context: CanvasRenderingContext2D) {
     this.#params = props;
     this.#context = context;
@@ -63,6 +67,18 @@ export default class Circle {
     if (this.#params.y + this.#params.radius >= y2) {
       this.#params.y = y2 - this.#params.radius;
     }
+  }
+
+  checkRectColliding(x: number, y: number, width: number, height: number) {
+    const closestX = Circle.clamp(this.#params.x, x, x + width);
+    const closestY = Circle.clamp(this.#params.y, y, y + height);
+
+    const distanceX = this.#params.x - closestX;
+    const distanceY = this.#params.y - closestY;
+
+    const distance = Math.pow(distanceX, 2) + Math.pow(distanceY, 2);
+
+    return distance < Math.pow(this.#params.radius, 2);
   }
 
   isCursorOverCircle(x: number, y: number) {

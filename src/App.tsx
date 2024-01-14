@@ -2,7 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { LazyLoad } from "./components/LazyLoad";
 import { RPSPage } from "./Pages/RPS";
-import { CircleBoardPage } from "./Pages/CircleBoard";
+import { DashRunPage } from "./Pages/DashRun";
 import "./styles/tailwind.css";
 
 const App: React.FC = () => {
@@ -18,10 +18,10 @@ const App: React.FC = () => {
           }
         />
         <Route
-          path="/circle-board"
+          path="/dash-run"
           element={
             <LazyLoad>
-              <CircleBoardPage />
+              <DashRunPage />
             </LazyLoad>
           }
         />
