@@ -96,7 +96,10 @@ const RPS = observer((props: IProps) => {
                       result={props.store.result.player}
                       title="You"
                     />
-                    <ResultView result={props.store.result.ai!} title="AI" />
+                    <ResultView
+                      result={props.store.result.ai!}
+                      title="Computer"
+                    />
                   </div>
                 )}
                 <div className="relateive shadow-2xl md:shadow-none mt-4 md:mt-0 md:absolute bg-white md:bg-transparent flex justify-center items-center bottom-4 w-full md:w-[100] p-4 md:p-0">
