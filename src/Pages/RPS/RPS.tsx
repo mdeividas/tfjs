@@ -3,15 +3,15 @@ import * as tf from "@tensorflow/tfjs";
 import { Blocks } from "react-loader-spinner";
 import { observer, Provider } from "mobx-react";
 import { loadModel } from "./tensorflow";
-import Webcam from "./../../services/Camera";
+import Camera from "./../../services/Camera";
 import { ErrorView } from "./components/ErrorView";
 import { PlayView } from "./components/PlayView";
 import { ResultView } from "./components/ResultView.tsx";
 import { IntroView } from "./components/IntroView";
-import { WIDTH, HEIGHT, CATEGORIES, EMOJI_BY_CATEGORIES } from "./constants";
+import { CATEGORIES, EMOJI_BY_CATEGORIES, HEIGHT, WIDTH } from "./constants";
 import { store, Store } from "./store";
 
-let camera: Webcam;
+let camera: Camera;
 let model: tf.LayersModel;
 
 interface IProps {
@@ -22,7 +22,7 @@ const RPS = observer((props: IProps) => {
   const videoRef = React.useRef<HTMLVideoElement>(null);
 
   const handleWebCamera = async () => {
-    camera = new Webcam(videoRef.current!, WIDTH, HEIGHT);
+    camera = new Camera(videoRef.current!, WIDTH, HEIGHT);
 
     await camera.setup();
   };
@@ -96,10 +96,7 @@ const RPS = observer((props: IProps) => {
                       result={props.store.result.player}
                       title="You"
                     />
-                    <ResultView
-                      result={props.store.result.ai!}
-                      title="Computer"
-                    />
+                    <ResultView result={props.store.result.ai!} title="AI" />
                   </div>
                 )}
                 <div className="relateive shadow-2xl md:shadow-none mt-4 md:mt-0 md:absolute bg-white md:bg-transparent flex justify-center items-center bottom-4 w-full md:w-[100] p-4 md:p-0">
