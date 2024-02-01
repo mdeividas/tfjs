@@ -4,7 +4,7 @@ interface IProps {
   error: string;
 }
 
-export const ErrorView: React.FC<IProps> = (props) => (
+export const GeneralErrorView: React.FC<IProps> = (props) => (
   <>
     <div role="alert" className="mt-8">
       <div className="bg-red-500 text-white font-bold rounded-t px-4 py-2">

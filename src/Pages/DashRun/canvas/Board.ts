@@ -154,7 +154,6 @@ export default class Board {
   start() {
     this.#terminated = false;
 
-    console.log("__DEBUG", this.#canvas.height);
     this.#circle = new Circle(
       {
         x: 40,
