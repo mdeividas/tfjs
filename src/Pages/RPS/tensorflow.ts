@@ -1,7 +1,7 @@
-import * as tf from "@tensorflow/tfjs";
+import * as tf from '@tensorflow/tfjs';
 
 export const loadModel = async () => {
-  const url = "/models/rps/model.json";
+    const url = '/models/rps/model.json';
 
-  return tf.loadLayersModel(url);
+    return tf.loadLayersModel(url);
 };

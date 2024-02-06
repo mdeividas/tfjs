@@ -1,27 +1,27 @@
-import { makeObservable, observable, action } from "mobx";
+import { makeObservable, observable, action } from 'mobx';
 
 export default class Store {
-  isReady: boolean = false;
+    isReady: boolean = false;
 
-  error: string = "";
+    error: string = '';
 
-  results: { level: number } = {
-    level: 1,
-  };
+    results: { level: number } = {
+        level: 1,
+    };
 
-  constructor() {
-    makeObservable(this, {
-      isReady: observable,
-      error: observable,
-      setReady: action,
-    });
-  }
+    constructor() {
+        makeObservable(this, {
+            isReady: observable,
+            error: observable,
+            setReady: action,
+        });
+    }
 
-  setReady() {
-    this.isReady = true;
-  }
+    setReady() {
+        this.isReady = true;
+    }
 
-  setError(error: unknown) {
-    this.error = typeof error === "string" ? error : (error as Error).message;
-  }
+    setError(error: unknown) {
+        this.error = typeof error === 'string' ? error : (error as Error).message;
+    }
 }

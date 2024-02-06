@@ -1,7 +1,5 @@
 import React from 'react';
 
-const CommonError = () => <div>Oops!</div>;
-
 interface ErrorModel extends Error {
     code: string;
 }
@@ -55,7 +53,7 @@ export default class ErrorBoundary extends React.Component<React.PropsWithChildr
                 return this.props.FallBackComponent;
             }
 
-            return <CommonError />;
+            return <div>Oops!</div>;
         }
 
         return this.props.children;

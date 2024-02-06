@@ -2,11 +2,13 @@
   "name": "tfjs",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "prettier": "prettier \"src/**/*.{ts,tsx}\" --write --config .prettierrc.js",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "check": "yarn lint && yarn prettier",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -21,7 +23,7 @@
     "mobx": "^6.12.0",
     "mobx-react": "^9.1.0",
     "postcss": "^8.4.32",
-    "prettier": "^3.1.1",
+    "prettier": "^3.2.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-loader-spinner": "^6.1.6",

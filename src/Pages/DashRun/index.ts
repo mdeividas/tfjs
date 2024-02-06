@@ -1,3 +1,3 @@
-import React from "react";
+import React from 'react';
 
-export const DashRunPage = React.lazy(() => import("./DashRun.tsx"));
+export const DashRunPage = React.lazy(() => import('./DashRun.tsx'));

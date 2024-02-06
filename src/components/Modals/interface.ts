@@ -1,3 +1,3 @@
 export interface IModal {
-  onClose(): void;
+    onClose(): void;
 }

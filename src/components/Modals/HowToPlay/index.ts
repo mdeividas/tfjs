@@ -1,1 +1,1 @@
-export { HowToPlay } from "./HowToPlay.tsx";
+export { HowToPlay } from './HowToPlay.tsx';

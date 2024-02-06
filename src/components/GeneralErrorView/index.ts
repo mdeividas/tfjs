@@ -1,1 +1,1 @@
-export { GeneralErrorView } from "./GeneralErrorView.tsx";
+export { GeneralErrorView } from './GeneralErrorView.tsx';
