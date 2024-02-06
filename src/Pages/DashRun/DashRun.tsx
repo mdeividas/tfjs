@@ -13,6 +13,7 @@ import {
 import { store, Store } from "./store";
 import { GeneralErrorView } from "../../components/GeneralErrorView";
 import { Loader } from "../../components/Loader";
+import { IntroView } from "../../components/IntroView";
 
 let camera: Webcam;
 const model = handPoseDetection.SupportedModels.MediaPipeHands;
@@ -107,12 +108,19 @@ const DashRun = observer((props: IProps) => {
     return;
   };
 
-  console.log("__DEBUG", !props.store.error);
-
   return (
-    <div className="flex flex-col mx-auto max-w-screen-xl p-4">
+    <div className="flex flex-col mx-auto p-4">
+      <h2 className="text-center text-6xl mt-8 mb-8">〰️🏃〰️</h2>
+
       {!props.store.error && (
         <>
+          <IntroView
+            onClick={() =>
+              canvas.current!.scrollIntoView({ behavior: "smooth" })
+            }
+            text="The project showcases the implementation of a TensorFlow model using TensorFlow.js. It features a hand-pose-detection TensorFlow model, which is already trained and ready for use. For hand pose classification, K-means classification was utilized. The model was trained on Colab and later exported to the client-side. All UI elements are canvas-based, and element collision detection is performed using trigonometry calculations."
+            htpLink="https://www.youtube.com/embed/xPoNhrZ36k4?si=O6MzqJGjqxRP-oDY"
+          />
           <video
             ref={videoRef}
             autoPlay

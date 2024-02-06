@@ -7,7 +7,7 @@ import { GeneralErrorView } from "../../components/GeneralErrorView";
 import { Loader } from "../../components/Loader";
 import { PlayView } from "./components/PlayView";
 import { ResultView } from "./components/ResultView.tsx";
-import { IntroView } from "./components/IntroView";
+import { IntroView } from "../../components/IntroView";
 import { CATEGORIES, EMOJI_BY_CATEGORIES, HEIGHT, WIDTH } from "./constants";
 import { store, Store } from "./store";
 
@@ -75,6 +75,14 @@ const RPS = observer((props: IProps) => {
             onClick={() =>
               videoRef.current!.scrollIntoView({ behavior: "smooth" })
             }
+            text="The project showcases the implementation of a TensorFlow model using
+                  TensorFlow.js. It involves using TensorFlow to train the model, with
+                  transfer learning techniques applied from MobileNetV2 using a custom
+                  dataset. After training, the model, originally in Keras format, was
+                  converted to JSON for compatibility with TensorFlow.js. This conversion
+                  enables the use of the model in web environments, facilitating predictions
+                  directly in the browser using TensorFlow.js."
+            htpLink="https://www.youtube.com/embed/xPoNhrZ36k4?si=O6MzqJGjqxRP-oDY"
           />
           <div className="relative flex flex-col md:flex-row justify-center items-center">
             <div className="w-full flex items-center justify-center">
