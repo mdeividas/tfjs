@@ -73,7 +73,7 @@ export default class Board {
                     dimensions.x,
                     dimensions.y,
                     dimensions.width,
-                    dimensions.height,
+                    dimensions.height
                 );
 
                 if (overlap) {
@@ -159,14 +159,14 @@ export default class Board {
                 radius: 65,
                 color: ['#a5f3fc', '#0891b2'],
             },
-            this.#context!,
+            this.#context!
         );
 
         this.#obstacles = Array.from(
             {
                 length: Math.floor((this.#canvas.width - 200) / 450),
             },
-            (_: number, index: number) => (index + 1) * 400,
+            (_: number, index: number) => (index + 1) * 400
         ).map(
             (value) =>
                 new Obstacle(
@@ -175,8 +175,8 @@ export default class Board {
                         x: value,
                         totalHeight: this.#canvas.height,
                     },
-                    this.#context!,
-                ),
+                    this.#context!
+                )
         );
 
         if (this.#animation) {

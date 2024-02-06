@@ -2,11 +2,11 @@
   "name": "tfjs",
   "private": true,
   "version": "0.0.0",
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "prettier": "prettier \"src/**/*.{ts,tsx}\" --write --config .prettierrc.js",
+    "prettier": "prettier \"src/**/*.{ts,tsx}\" --write",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "check": "yarn lint && yarn prettier",
     "preview": "vite preview"

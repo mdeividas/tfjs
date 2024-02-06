@@ -47,25 +47,25 @@ export const getHandPoseEstimationsDistances = (data: Record<string, handPoseDet
         data.wrist.x,
         data.index_finger_tip.x,
         data.wrist.y,
-        data.index_finger_tip.y,
+        data.index_finger_tip.y
     );
     const wristMiddleDistance = calculateDistance(
         data.wrist.x,
         data.middle_finger_tip.x,
         data.wrist.y,
-        data.middle_finger_tip.y,
+        data.middle_finger_tip.y
     );
     const wristRingDistance = calculateDistance(
         data.wrist.x,
         data.ring_finger_tip.x,
         data.wrist.y,
-        data.ring_finger_tip.y,
+        data.ring_finger_tip.y
     );
     const wristPinkyDistance = calculateDistance(
         data.wrist.x,
         data.pinky_finger_tip.x,
         data.wrist.y,
-        data.pinky_finger_tip.y,
+        data.pinky_finger_tip.y
     );
 
     return [wristThumbDistance, wristIndexDistance, wristMiddleDistance, wristRingDistance, wristPinkyDistance];

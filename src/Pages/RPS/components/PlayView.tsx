@@ -81,5 +81,5 @@ export const PlayView = inject('store')(
                 </button>
             </div>
         );
-    }),
+    })
 );

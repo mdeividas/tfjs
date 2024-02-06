@@ -66,7 +66,7 @@ const DashRun = observer((props: IProps) => {
             board.current!.setCursor(
                 interpolate(data.wrist.x, 0, 300, window.innerWidth, 0),
                 interpolate(data.wrist.y, 0, 240, 0, window.innerHeight),
-                category === 0, // indicates that the hand pose is fist
+                category === 0 // indicates that the hand pose is fist
             );
         }
 
