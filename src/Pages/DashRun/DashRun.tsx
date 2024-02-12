@@ -112,7 +112,7 @@ const DashRun = observer((props: IProps) => {
                     <IntroView
                         onClick={() => canvas.current!.scrollIntoView({ behavior: 'smooth' })}
                         text="The project showcases the implementation of a TensorFlow model using TensorFlow.js. It features a hand-pose-detection TensorFlow model, which is already trained and ready for use. For hand pose classification, K-means classification was utilized. The model was trained on Colab and later exported to the client-side. All UI elements are canvas-based, and element collision detection is performed using trigonometry calculations."
-                        htpLink="https://www.youtube.com/embed/xPoNhrZ36k4?si=O6MzqJGjqxRP-oDY"
+                        htpLink="https://www.youtube.com/embed/_X1YXE_11qs?si=sASQOAuIz9rjUbtZ"
                     />
                     <video
                         ref={videoRef}
