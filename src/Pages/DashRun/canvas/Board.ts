@@ -70,12 +70,12 @@ export default class Board {
     this.#context!.fillStyle = "black";
     this.#context!.strokeStyle = "black";
 
-    for (let rows = 0; rows < 8; rows++) {
-      for (let i = 0; i < this.#canvas.width / 50; i++) {
-        if (i % 2 === rows % 2) {
+    for (let columns = 0; columns < 8; columns++) {
+      for (let rows = 0; rows < this.#canvas.width / 50; rows++) {
+        if (rows % 2 === columns % 2) {
           this.#context!.fillRect(
-            this.#canvas.width - rows * 50,
-            i * 50,
+            this.#canvas.width - columns * 50,
+            rows * 50,
             50,
             50,
           );
