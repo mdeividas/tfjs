@@ -1,195 +1,216 @@
-import Circle from './Circle.ts';
-import Cursor from './Cursor.ts';
-import Obstacle from './Obstacle.ts';
+import Circle from "./Circle.ts";
+import Cursor from "./Cursor.ts";
+import Obstacle from "./Obstacle.ts";
 
 interface IAnimation {
-    id: number;
-    lastTime: number;
-    timer: number;
+  id: number;
+  lastTime: number;
+  timer: number;
 }
 
 export default class Board {
-    #canvas: HTMLCanvasElement;
+  #canvas: HTMLCanvasElement;
 
-    #x: number = 0;
+  #x: number = 0;
 
-    #y: number = 0;
+  #y: number = 0;
 
-    #context: CanvasRenderingContext2D | undefined;
+  #context: CanvasRenderingContext2D | undefined;
 
-    #circle: Circle | undefined;
+  #circle: Circle | undefined;
 
-    #cursor: Cursor | undefined;
+  #cursor: Cursor | undefined;
 
-    #obstacles: Obstacle[] | undefined;
+  #obstacles: Obstacle[] | undefined;
 
-    #animation: IAnimation = {
-        id: -1,
-        lastTime: 0,
-        timer: 0,
-    };
+  #animation: IAnimation = {
+    id: -1,
+    lastTime: 0,
+    timer: 0,
+  };
 
-    #terminated: boolean = false;
+  #terminated: boolean = false;
 
-    #onLost: (() => void) | undefined;
+  #onLost: (() => void) | undefined;
 
-    #onWin: (() => void) | undefined;
+  #onWin: (() => void) | undefined;
 
-    static FRAME_INTERVAL = 1000 / 60;
+  static FRAME_INTERVAL = 1000 / 60;
 
-    constructor(canvas: HTMLCanvasElement) {
-        this.#canvas = canvas;
+  constructor(canvas: HTMLCanvasElement) {
+    this.#canvas = canvas;
 
-        this.init();
+    this.init();
+  }
+
+  set onLost(cb: () => void) {
+    this.#onLost = cb;
+  }
+
+  set onWin(cb: () => void) {
+    this.#onWin = cb;
+  }
+
+  #draw() {
+    this.#context!.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
+
+    this.#obstacles!.forEach((obstacle) =>
+      obstacle.dimensions.forEach(() => obstacle.draw()),
+    );
+
+    this.#circle!.checkXColliding(this.#x, this.#canvas.width);
+    this.#circle!.checkYColliding(this.#y, this.#canvas.height);
+    this.#circle!.draw();
+
+    this.#cursor!.draw();
+
+    // Draw a flag
+    this.#context!.beginPath();
+
+    this.#context!.fillStyle = "black";
+    this.#context!.strokeStyle = "black";
+
+    for (let rows = 0; rows < 8; rows++) {
+      for (let i = 0; i < this.#canvas.width / 50; i++) {
+        if (i % 2 === rows % 2) {
+          this.#context!.fillRect(
+            this.#canvas.width - rows * 50,
+            i * 50,
+            50,
+            50,
+          );
+        }
+      }
     }
+  }
 
-    set onLost(cb: () => void) {
-        this.#onLost = cb;
-    }
+  #animate(timestamp = 0) {
+    let overlap = false;
+    const deltaTime = timestamp - this.#animation.lastTime;
 
-    set onWin(cb: () => void) {
-        this.#onWin = cb;
-    }
+    this.#obstacles!.forEach((obstacle) => {
+      obstacle.dimensions.forEach((dimensions) => {
+        overlap = this.#circle!.checkRectColliding(
+          dimensions.x,
+          dimensions.y,
+          dimensions.width,
+          dimensions.height,
+        );
 
-    #draw() {
-        this.#context!.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
+        if (overlap) {
+          this.#terminated = true;
 
-        this.#obstacles!.forEach((obstacle) => obstacle.dimensions.forEach(() => obstacle.draw()));
-
-        this.#circle!.checkXColliding(this.#x, this.#canvas.width);
-        this.#circle!.checkYColliding(this.#y, this.#canvas.height);
-        this.#circle!.draw();
-
-        this.#cursor!.draw();
-    }
-
-    #animate(timestamp = 0) {
-        let overlap = false;
-        const deltaTime = timestamp - this.#animation.lastTime;
-
-        this.#obstacles!.forEach((obstacle) => {
-            obstacle.dimensions.forEach((dimensions) => {
-                overlap = this.#circle!.checkRectColliding(
-                    dimensions.x,
-                    dimensions.y,
-                    dimensions.width,
-                    dimensions.height
-                );
-
-                if (overlap) {
-                    this.#terminated = true;
-
-                    if (this.#onLost) {
-                        this.#onLost();
-                        this.#draw();
-                    }
-                }
-            });
-        });
-
-        if (this.#animation.timer > Board.FRAME_INTERVAL) {
+          if (this.#onLost) {
+            this.#onLost();
             this.#draw();
-
-            this.#animation.timer = 0;
-        } else {
-            this.#animation.timer += deltaTime;
+          }
         }
+      });
+    });
 
-        this.#animation.lastTime = timestamp;
-        this.#animation.id = requestAnimationFrame(this.#animate.bind(this));
+    if (this.#animation.timer > Board.FRAME_INTERVAL) {
+      this.#draw();
+
+      this.#animation.timer = 0;
+    } else {
+      this.#animation.timer += deltaTime;
     }
 
-    #checkCursor(x: number, y: number, isFist: boolean) {
-        const circle = this.#circle!;
+    this.#animation.lastTime = timestamp;
+    this.#animation.id = requestAnimationFrame(this.#animate.bind(this));
+  }
 
-        if (isFist) {
-            if (circle.active) {
-                circle.update(x, y);
-                if (x >= this.#canvas.width - 200) {
-                    if (this.#onWin) {
-                        this.#onWin();
-                    }
-                }
-            } else if (circle.isCursorOverCircle(x, y)) {
-                circle.startActivating();
-            }
-        } else {
-            circle.setActive(false);
+  #checkCursor(x: number, y: number, isFist: boolean) {
+    const circle = this.#circle!;
+
+    if (isFist) {
+      if (circle.active) {
+        circle.update(x, y);
+        if (x >= this.#canvas.width - 200) {
+          if (this.#onWin) {
+            this.#onWin();
+          }
         }
+      } else if (circle.isCursorOverCircle(x, y)) {
+        circle.startActivating();
+      }
+    } else {
+      circle.setActive(false);
+    }
+  }
+
+  setCursor(x: number, y: number, isFist: boolean) {
+    const nextX = x - this.#x;
+    const nextY = y - this.#y;
+
+    if (this.#terminated) {
+      return;
     }
 
-    setCursor(x: number, y: number, isFist: boolean) {
-        const nextX = x - this.#x;
-        const nextY = y - this.#y;
+    this.#cursor!.update(nextX, nextY);
 
-        if (this.#terminated) {
-            return;
-        }
+    this.#checkCursor(nextX, nextY, isFist);
+  }
 
-        this.#cursor!.update(nextX, nextY);
+  init() {
+    const bounds = this.#canvas.getBoundingClientRect();
 
-        this.#checkCursor(nextX, nextY, isFist);
+    this.#x = bounds.x;
+
+    this.#y = bounds.y - bounds.top;
+
+    this.#context = this.#canvas.getContext("2d")!;
+
+    this.#canvas.width = window.innerWidth;
+    this.#canvas.height = window.innerHeight;
+    this.#canvas.classList.add("border-neutral-300", "border-2");
+
+    this.#cursor = new Cursor(this.#context!);
+
+    this.start();
+  }
+
+  start() {
+    this.#terminated = false;
+
+    this.#circle = new Circle(
+      {
+        x: 40,
+        y: this.#canvas.height / 2,
+        radius: 65,
+        color: ["#a5f3fc", "#0891b2"],
+      },
+      this.#context!,
+    );
+
+    this.#obstacles = Array.from(
+      {
+        length: Math.floor((this.#canvas.width - 200) / 450),
+      },
+      (_: number, index: number) => (index + 1) * 400,
+    ).map(
+      (value) =>
+        new Obstacle(
+          {
+            size: 60 * (2.2 + 0.2 * (Math.random() > 0.5 ? -1 : 1)),
+            x: value,
+            totalHeight: this.#canvas.height,
+          },
+          this.#context!,
+        ),
+    );
+
+    if (this.#animation) {
+      this.#animation.timer = 0;
+      this.#animation.lastTime = 0;
     }
 
-    init() {
-        const bounds = this.#canvas.getBoundingClientRect();
+    this.#animate();
+  }
 
-        this.#x = bounds.x;
-
-        this.#y = bounds.y - bounds.top;
-
-        this.#context = this.#canvas.getContext('2d')!;
-
-        this.#canvas.width = window.innerWidth;
-        this.#canvas.height = window.innerHeight;
-        this.#canvas.classList.add('border-neutral-300', 'border-2');
-
-        this.#cursor = new Cursor(this.#context!);
-
-        this.start();
+  destroy() {
+    if (this.#animation.id) {
+      cancelAnimationFrame(this.#animation.id);
     }
-
-    start() {
-        this.#terminated = false;
-
-        this.#circle = new Circle(
-            {
-                x: 40,
-                y: this.#canvas.height / 2,
-                radius: 65,
-                color: ['#a5f3fc', '#0891b2'],
-            },
-            this.#context!
-        );
-
-        this.#obstacles = Array.from(
-            {
-                length: Math.floor((this.#canvas.width - 200) / 450),
-            },
-            (_: number, index: number) => (index + 1) * 400
-        ).map(
-            (value) =>
-                new Obstacle(
-                    {
-                        size: 60 * (2.2 + 0.2 * (Math.random() > 0.5 ? -1 : 1)),
-                        x: value,
-                        totalHeight: this.#canvas.height,
-                    },
-                    this.#context!
-                )
-        );
-
-        if (this.#animation) {
-            this.#animation.timer = 0;
-            this.#animation.lastTime = 0;
-        }
-
-        this.#animate();
-    }
-
-    destroy() {
-        if (this.#animation.id) {
-            cancelAnimationFrame(this.#animation.id);
-        }
-    }
+  }
 }
