@@ -16,14 +16,17 @@ export const interpolate = (
 ) => yMin + ((x - xMin) / (xMax - xMin)) * (yMax - yMin);
 
 // This function's objective is to find which centroid is closer to the provided point.
-export const findNearestCentroid = (point: number[], centroids: number[][]) => {
+export const findNearestCentroid = (
+  distances: number[],
+  centroids: number[][],
+) => {
   let nearestCentroidIndex = 0;
   let minDistance = Infinity;
 
   centroids.forEach((centroid, index) => {
     let distance = 0;
     for (let i = 0; i < centroid.length; i++) {
-      distance += Math.pow(centroid[i] - point[i], 2);
+      distance += Math.pow(centroid[i] - distances[i], 2);
     }
     distance = Math.sqrt(distance);
 
@@ -36,7 +39,7 @@ export const findNearestCentroid = (point: number[], centroids: number[][]) => {
   return nearestCentroidIndex;
 };
 
-export const KMeansCentroidsSearch = (point: number[]) => {
+export const KMeansCentroidsSearch = (distances: number[]) => {
   const centroids = [
     [
       60.44377635123625, 51.557028154899726, 44.623663749718425,
@@ -48,7 +51,7 @@ export const KMeansCentroidsSearch = (point: number[]) => {
     ],
   ];
 
-  return findNearestCentroid(point, centroids);
+  return findNearestCentroid(distances, centroids);
 };
 
 export const createKeyMap = (

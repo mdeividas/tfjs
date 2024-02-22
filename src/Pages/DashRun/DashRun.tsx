@@ -65,8 +65,8 @@ const DashRun = observer((props: IProps) => {
 
     if (hands.length) {
       const data = createKeyMap(hands[0].keypoints);
-      const points = getHandPoseEstimationsDistances(data);
-      const category = KMeansCentroidsSearch(points);
+      const distances = getHandPoseEstimationsDistances(data);
+      const category = KMeansCentroidsSearch(distances);
 
       board.current!.setCursor(
         interpolate(data.wrist.x, 0, 300, window.innerWidth, 0),
